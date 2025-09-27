@@ -9,17 +9,18 @@
             placeholder="Cari task berdasarkan judul, deskripsi, atau deadline..." oninput="filterTasks()" />
     </div>
 
-    <div class="filter-group">
-        <select class="filter-select" id="columnFilter" onchange="filterTasks()">
-            <option value="">Semua Kolom</option>
-            <option value="product-backlog">
-                Product Backlog
-            </option>
-            <option value="in-progress">In Progress</option>
-            <option value="pending">Pending</option>
-            <option value="done">Done</option>`
-            <option value="overdue">Overdue</option>
-        </select>
+    <div class="filter-group custom-filter-group" id="userFilterGroup">
+        <button type="button" class="filter-select custom-filter-toggle" id="userFilterToggle"
+            onclick="toggleUserFilterDropdown()">
+            Filter User <span id="selectedUserName" class="filter-selection-display"></span>
+        </button>
+        <div class="custom-filter-dropdown" id="userFilterDropdown" style="display: none;">
+            <input type="text" id="userSearchInput" class="user-search-input" placeholder="Cari user..."
+                oninput="filterUserList(this.value)" />
+            <div class="user-list-container" id="userListContainer">
+            </div>
+            <button type="button" class="btn-clear-filter" onclick="clearUserFilter()">Hapus Filter</button>
+        </div>
     </div>
 
     <div class="filter-group">

@@ -1180,3 +1180,109 @@ body {
     font-size: 10px;
     color: #718096;
 }
+
+/* Custom Filter Dropdown Styles */
+.custom-filter-group {
+    position: relative;
+}
+
+.custom-filter-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    /* Meniru gaya .filter-select */
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background-color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.custom-filter-toggle:hover {
+    border-color: #4299e1;
+}
+
+.filter-selection-display {
+    font-weight: bold;
+    color: #4299e1; /* Warna untuk nama user yang dipilih */
+    margin-left: 5px;
+}
+
+.custom-filter-dropdown {
+    position: absolute;
+    top: 100%; /* Posisikan di bawah tombol */
+    left: 0;
+    z-index: 10;
+    min-width: 250px;
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    margin-top: 5px; /* Jarak kecil dari tombol */
+}
+
+.user-search-input {
+    width: 100%;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.user-list-container {
+    max-height: 200px;
+    overflow-y: auto;
+    border-top: 1px solid #edf2f7;
+    padding-top: 5px;
+}
+
+.user-filter-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.15s;
+    font-size: 14px;
+}
+
+.user-filter-item:hover,
+.user-filter-item.selected {
+    background-color: #ebf8ff; /* Biru muda saat hover atau terpilih */
+}
+
+.user-avatar-small {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.user-filter-item.selected .user-name {
+    font-weight: bold;
+    color: #4299e1;
+}
+
+.btn-clear-filter {
+    width: 100%;
+    margin-top: 10px;
+    padding: 6px;
+    background: #f7fafc;
+    color: #e53e3e;
+    border: 1px solid #e53e3e;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}

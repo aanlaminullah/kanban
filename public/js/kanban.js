@@ -311,6 +311,21 @@ let tasks = [
     },
 ];
 
+// --- NEW GLOBAL STATE FOR USER FILTER ---
+let selectedUserFilter = "";
+const userNames = Object.keys(users); // Array of user keys for filtering
+// ----------------------------------------
+
+// Helper function to get initials/avatar (if not already present)
+function getAvatarHtml(userKey) {
+    const user = users[userKey];
+    if (!user)
+        return '<div class="user-avatar-small" style="background: #a0aec0;">?</div>';
+    return `<div class="user-avatar-small" style="background: ${user.color};">${user.avatar}</div>`;
+}
+
+// ... (lanjutkan dengan kode kanban.js yang sudah ada)
+
 let draggedTask = null;
 let nextTaskId = 6;
 let nextSubtaskId = 10;
@@ -392,22 +407,40 @@ function updateOverdueStatus() {
 function filterTasks() {
     const searchTerm =
         document.getElementById("searchInput")?.value?.toLowerCase() || "";
-    const columnFilter = document.getElementById("columnFilter")?.value || "";
+    // HAPUS/KOMENTARI: Filter kolom ini tidak lagi digunakan
+    // const columnFilter = document.getElementById("columnFilter")?.value || "";
     const priorityFilter =
         document.getElementById("priorityFilter")?.value || "";
     const bidangFilter = document.getElementById("bidangFilter")?.value || "";
-    const userFilter =
-        document.getElementById("userFilter")?.value?.toLowerCase() || "";
+
+    // UBAH: Ambil nilai dari variabel global 'selectedUserFilter' yang baru
+    // yang diisi oleh fungsi selectUserFilter()
+    const userFilterKey = selectedUserFilter; // <-- PENTING: Ganti dengan variabel global yang baru
+    // const userFilter = document.getElementById("userFilter")?.value?.toLowerCase() || ""; // <-- HAPUS/KOMENTARI BARIS LAMA INI
 
     filteredTasks = tasks.filter((task) => {
-        // Filter by column
-        if (columnFilter && task.column !== columnFilter) return false;
+        // HAPUS: Logika Filter by column (karena diganti)
+        // if (columnFilter && task.column !== columnFilter) return false;
+
         // Filter by priority
         if (priorityFilter && task.priority !== priorityFilter) return false;
         // Filter by bidang
         if (bidangFilter && task.bidang !== bidangFilter) return false;
 
-        // Filter by assigned user (dropdown)
+        // UBAH: Filter by assigned user (Gunakan userFilterKey)
+        // Ini adalah logika yang sekarang menggunakan variabel global
+        if (userFilterKey) {
+            // Cek apakah assignedUsers berisi key user yang dipilih (userFilterKey)
+            if (
+                !task.assignedUsers ||
+                !task.assignedUsers.includes(userFilterKey)
+            ) {
+                return false;
+            }
+        }
+
+        // --- LOGIKA FILTER LAMA INI DIHAPUS KARENA SUDAH DISEDERHANAKAN DI ATAS ---
+        /*
         if (userFilter) {
             const userMatch = (task.assignedUsers || []).some((uid) => {
                 const user = users[uid];
@@ -419,8 +452,11 @@ function filterTasks() {
             });
             if (!userMatch) return false;
         }
+        */
+        // ------------------------------------------------------------------------
 
         // Filter by search term (judul, deskripsi, deadline, subtask, user)
+        // ... (Logika search term tetap sama)
         if (searchTerm) {
             const inTitle = task.title?.toLowerCase().includes(searchTerm);
             const inDesc = task.description?.toLowerCase().includes(searchTerm);
@@ -446,7 +482,7 @@ function filterTasks() {
         return true;
     });
 
-    renderTasks();
+    renderTasks(filteredTasks); // Pastikan ini menerima filteredTasks
     updateOverdueStatus();
 }
 
@@ -1348,6 +1384,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 sendMessage();
             }
         });
+
+    if (document.getElementById("userListContainer")) {
+        renderUserList();
+    }
 });
 
 // Remove drop-zone class when drag ends
@@ -1530,4 +1570,97 @@ function downloadFile(filename) {
     // Simulate file download
     alert(`Downloading: ${filename}`);
     // In real implementation, this would trigger actual file download
+}
+
+// Function to toggle the user filter dropdown
+function toggleUserFilterDropdown() {
+    const dropdown = document.getElementById("userFilterDropdown");
+    const isVisible = dropdown.style.display === "block";
+
+    if (!isVisible) {
+        renderUserList(); // Render the list when opening
+        // Add a temporary click listener to close the dropdown when clicking outside
+        document.addEventListener("click", closeUserFilterOutside, true);
+        dropdown.style.display = "block";
+    } else {
+        // Remove click listener when closing
+        document.removeEventListener("click", closeUserFilterOutside, true);
+        dropdown.style.display = "none";
+    }
+}
+
+// Function to close the dropdown when clicking outside
+function closeUserFilterOutside(event) {
+    const filterGroup = document.getElementById("userFilterGroup");
+    const dropdown = document.getElementById("userFilterDropdown");
+
+    // Cek apakah yang diklik BUKAN bagian dari filter group
+    if (filterGroup && !filterGroup.contains(event.target)) {
+        dropdown.style.display = "none";
+        document.removeEventListener("click", closeUserFilterOutside, true);
+    }
+}
+
+// Function to render the list of users
+function renderUserList(searchQuery = "") {
+    const container = document.getElementById("userListContainer");
+    let html = "";
+    const query = searchQuery.toLowerCase().trim();
+
+    const filteredUsers = userNames.filter((userKey) => {
+        const user = users[userKey];
+        if (!user) return false;
+        // Filter berdasarkan user key atau nama lengkap user
+        return (
+            userKey.toLowerCase().includes(query) ||
+            user.name.toLowerCase().includes(query)
+        );
+    });
+
+    if (filteredUsers.length === 0) {
+        html =
+            '<div style="padding: 8px; color: #718096; font-size: 14px;">User tidak ditemukan.</div>';
+    } else {
+        filteredUsers.forEach((userKey) => {
+            const user = users[userKey];
+            const isSelected = userKey === selectedUserFilter;
+            const selectedClass = isSelected ? " selected" : "";
+
+            html += `
+                <div class="user-filter-item${selectedClass}" onclick="selectUserFilter('${userKey}', '${
+                user.name
+            }')">
+                    ${getAvatarHtml(userKey)}
+                    <span class="user-name">${user.name}</span>
+                </div>
+            `;
+        });
+    }
+
+    container.innerHTML = html;
+}
+
+// Function to filter the user list based on input
+function filterUserList(query) {
+    renderUserList(query);
+}
+
+// Function to select a user and apply the filter
+function selectUserFilter(userKey, userName) {
+    selectedUserFilter = userKey;
+    document.getElementById("selectedUserName").textContent = `(${userName})`;
+    document.getElementById("userFilterDropdown").style.display = "none";
+    document.getElementById("userSearchInput").value = ""; // Clear search input
+    renderUserList(); // Re-render to show selection
+    filterTasks(); // Apply task filter
+}
+
+// Function to clear the user filter
+function clearUserFilter() {
+    selectedUserFilter = "";
+    document.getElementById("selectedUserName").textContent = "";
+    document.getElementById("userFilterDropdown").style.display = "none";
+    document.getElementById("userSearchInput").value = ""; // Clear search input
+    renderUserList(); // Re-render to clear selection
+    filterTasks(); // Apply task filter
 }
