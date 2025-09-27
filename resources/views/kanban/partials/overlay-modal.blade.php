@@ -59,3 +59,39 @@
         </form>
     </div>
 </div>
+
+<!-- Chat Modal -->
+<div class="modal-overlay" id="chatModal">
+    <div class="chat-modal">
+        <div class="modal-header">
+            <h3 class="modal-title" id="chatTaskTitle">Chat & Files - Task Title</h3>
+            <button class="close-btn" onclick="closeChatModal()">&times;</button>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will be inserted here -->
+        </div>
+
+        <div class="chat-input-section">
+            <div class="chat-input-container">
+                <textarea id="messageInput" class="chat-input" placeholder="Tulis komentar..."></textarea>
+                <button class="send-message-btn" onclick="sendMessage()">Kirim</button>
+            </div>
+
+            <div class="file-upload-section">
+                <div class="file-input-wrapper">
+                    <input type="file" id="fileInput" class="file-input" multiple onchange="handleFileSelect(event)">
+                    <button class="file-upload-btn" onclick="document.getElementById('fileInput').click()">
+                        <svg width="12" height="12" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        Attach File
+                    </button>
+                </div>
+                <div class="selected-files" id="selectedFiles"></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -19,7 +19,6 @@
                     <input type="text" id="taskTitle" class="form-input" placeholder="Masukkan judul task..."
                         required />
                 </div>
-
                 <div class="form-group">
                     <label class="form-label" for="taskPriority">Prioritas</label>
                     <select id="taskPriority" class="form-select" required>

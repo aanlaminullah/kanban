@@ -150,6 +150,41 @@ let tasks = [
                 createdBy: "alice",
             },
         ],
+        attachments: [
+            // TAMBAH
+            {
+                id: 1,
+                name: "requirements.pdf",
+                size: "2.3 MB",
+                type: "pdf",
+                uploadedBy: "john",
+                uploadedAt: new Date("2024-09-02T10:00:00"),
+            },
+        ],
+        comments: [
+            // TAMBAH
+            {
+                id: 1,
+                text: "Sudah mulai implementasi JWT",
+                author: "john",
+                createdAt: new Date("2024-09-02T11:00:00"),
+                attachments: [],
+            },
+            {
+                id: 2,
+                text: "Perlu review lagi untuk security",
+                author: "alice",
+                createdAt: new Date("2024-09-02T15:30:00"),
+                attachments: [
+                    {
+                        id: 2,
+                        name: "security-checklist.docx",
+                        size: "1.1 MB",
+                        type: "docx",
+                    },
+                ],
+            },
+        ],
     },
     {
         id: 2,
@@ -437,18 +472,27 @@ function createTaskCard(task) {
           }</span>`
         : "";
 
-    // Generate assigned users HTML
+    // Generate assigned users HTML (max 3 avatars + counter)
+    const maxVisibleUsers = 3;
+    const assignedUsers = task.assignedUsers || [];
+    const visibleUsers = assignedUsers.slice(0, maxVisibleUsers);
+    const hiddenUsersCount = assignedUsers.length - maxVisibleUsers;
+
     const assignedUsersHTML =
-        task.assignedUsers
-            ?.map((userId) => {
-                const user = users[userId];
-                // Check if user exists (to prevent error for old data)
-                if (user) {
-                    return `<div class="assigned-user-avatar" style="background: ${user.color}" title="${user.name}">${user.avatar}</div>`;
-                }
-                return "";
-            })
-            .join("") || "";
+        assignedUsers.length > 0
+            ? visibleUsers
+                  .map((userId) => {
+                      const user = users[userId];
+                      if (user) {
+                          return `<div class="assigned-user-avatar" style="background: ${user.color}" title="${user.name}">${user.avatar}</div>`;
+                      }
+                      return "";
+                  })
+                  .join("") +
+              (hiddenUsersCount > 0
+                  ? `<div class="user-counter" title="${hiddenUsersCount} user lainnya">+${hiddenUsersCount}</div>`
+                  : "")
+            : "";
 
     // Generate subtasks HTML
     const subtasksHTML =
@@ -475,6 +519,68 @@ function createTaskCard(task) {
                     <span style="font-weight: bold;">Alasan Pending:</span> ${task.pendingReason}
                  </div>`
             : "";
+    const attachmentsHTML =
+        task.attachments && task.attachments.length > 0
+            ? `<div class="task-attachments">
+        ${task.attachments
+            .slice(0, 3)
+            .map(
+                (attachment) =>
+                    `<div class="attachment-item" title="${attachment.name} (${attachment.size})">
+                <svg class="attachment-icon" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+                </svg>
+                ${attachment.name}
+            </div>`
+            )
+            .join("")}
+        ${
+            task.attachments.length > 3
+                ? `<span class="attachment-item">+${
+                      task.attachments.length - 3
+                  } lagi</span>`
+                : ""
+        }
+       </div>`
+            : "";
+
+    // Generate recent comments HTML
+    const commentsHTML =
+        task.comments && task.comments.length > 0
+            ? `<div class="chat-comments">
+        ${task.comments
+            .slice(-2)
+            .map(
+                (comment) =>
+                    `<div class="chat-comment">
+                <span class="chat-author">${
+                    users[comment.author]?.name || comment.author
+                }:</span>
+                ${comment.text.substring(0, 50)}${
+                        comment.text.length > 50 ? "..." : ""
+                    }
+            </div>`
+            )
+            .join("")}
+       </div>`
+            : "";
+
+    // Chat section
+    const chatSectionHTML =
+        (task.attachments && task.attachments.length > 0) ||
+        (task.comments && task.comments.length > 0)
+            ? `<div class="task-chat-section">
+        ${attachmentsHTML}
+        ${commentsHTML}
+        <button class="chat-toggle" onclick="openChatModal(${task.id})">
+            ${task.comments?.length || 0} komentar • ${
+                  task.attachments?.length || 0
+              } file
+        </button>
+       </div>`
+            : `<div class="task-chat-section">
+        <button class="chat-toggle" onclick="openChatModal(${task.id})">Tambah komentar atau file</button>
+       </div>`;
 
     return `
                 <div class="task-card ${overdueClass}" draggable="true" data-task-id="${
@@ -508,6 +614,8 @@ function createTaskCard(task) {
                     
                     <div class="task-description">${task.description}</div>
                     
+                    ${chatSectionHTML}
+
                     ${pendingReasonHTML}
 
                     ${
@@ -1222,6 +1330,24 @@ document.addEventListener("DOMContentLoaded", function () {
         updateOverdueTasks();
         filterTasks();
     }, 60000);
+    // Close chat modal when clicking outside
+    document
+        .getElementById("chatModal")
+        .addEventListener("click", function (e) {
+            if (e.target === this) {
+                closeChatModal();
+            }
+        });
+
+    // Message input enter key (Ctrl+Enter to send)
+    document
+        .getElementById("messageInput")
+        .addEventListener("keydown", function (e) {
+            if (e.key === "Enter" && e.ctrlKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
 });
 
 // Remove drop-zone class when drag ends
@@ -1232,3 +1358,176 @@ document.addEventListener("dragend", function () {
     const draggingElements = document.querySelectorAll(".dragging");
     draggingElements.forEach((el) => el.classList.remove("dragging"));
 });
+
+let currentChatTaskId = null;
+let selectedFiles = [];
+let nextCommentId = 10;
+let nextAttachmentId = 10;
+
+// Chat Modal Functions
+function openChatModal(taskId) {
+    currentChatTaskId = taskId;
+    const task = tasks.find((t) => t.id === taskId);
+
+    if (!task) return;
+
+    document.getElementById(
+        "chatTaskTitle"
+    ).textContent = `Chat & Files - ${task.title}`;
+    document.getElementById("chatModal").classList.add("active");
+    document.body.style.overflow = "hidden";
+
+    renderChatMessages();
+    selectedFiles = [];
+    updateSelectedFiles();
+
+    setTimeout(() => {
+        document.getElementById("messageInput").focus();
+    }, 100);
+}
+
+function closeChatModal() {
+    document.getElementById("chatModal").classList.remove("active");
+    document.body.style.overflow = "auto";
+    currentChatTaskId = null;
+    selectedFiles = [];
+    document.getElementById("messageInput").value = "";
+}
+
+function renderChatMessages() {
+    const task = tasks.find((t) => t.id === currentChatTaskId);
+    const container = document.getElementById("chatMessages");
+
+    if (!task || !task.comments || task.comments.length === 0) {
+        container.innerHTML =
+            '<div style="text-align: center; color: #a0aec0; padding: 20px;">Belum ada komentar</div>';
+        return;
+    }
+
+    container.innerHTML = task.comments
+        .map((comment) => {
+            const author = users[comment.author] || {
+                name: comment.author,
+                color: "#4299e1",
+            };
+            const attachmentsHTML =
+                comment.attachments
+                    ?.map(
+                        (att) =>
+                            `<a href="#" class="message-attachment" onclick="downloadFile('${att.name}')">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+                ${att.name}
+            </a>`
+                    )
+                    .join("") || "";
+
+            return `
+            <div class="chat-message">
+                <div class="message-header">
+                    <span class="message-author">${author.name}</span>
+                    <span class="message-time">${formatDateTime(
+                        comment.createdAt
+                    )}</span>
+                </div>
+                <div class="message-text">${comment.text}</div>
+                ${
+                    attachmentsHTML
+                        ? `<div class="message-attachments">${attachmentsHTML}</div>`
+                        : ""
+                }
+            </div>
+        `;
+        })
+        .join("");
+
+    // Scroll to bottom
+    container.scrollTop = container.scrollHeight;
+}
+
+function sendMessage() {
+    const messageText = document.getElementById("messageInput").value.trim();
+
+    if (!messageText && selectedFiles.length === 0) {
+        alert("Masukkan pesan atau pilih file untuk dikirim");
+        return;
+    }
+
+    const task = tasks.find((t) => t.id === currentChatTaskId);
+    if (!task) return;
+
+    // Initialize comments and attachments arrays if they don't exist
+    if (!task.comments) task.comments = [];
+    if (!task.attachments) task.attachments = [];
+
+    // Create comment attachments
+    const commentAttachments = selectedFiles.map((file) => ({
+        id: nextAttachmentId++,
+        name: file.name,
+        size: formatFileSize(file.size),
+        type: file.type,
+    }));
+
+    // Add attachments to task
+    task.attachments.push(...commentAttachments);
+
+    // Add comment
+    const newComment = {
+        id: nextCommentId++,
+        text: messageText || "(File attached)",
+        author: "john", // Current user
+        createdAt: new Date(),
+        attachments: commentAttachments,
+    };
+
+    task.comments.push(newComment);
+
+    // Reset form
+    document.getElementById("messageInput").value = "";
+    selectedFiles = [];
+    updateSelectedFiles();
+
+    // Re-render
+    renderChatMessages();
+    renderTasks(); // Update task cards
+}
+
+function handleFileSelect(event) {
+    selectedFiles = Array.from(event.target.files);
+    updateSelectedFiles();
+}
+
+function updateSelectedFiles() {
+    const container = document.getElementById("selectedFiles");
+    if (selectedFiles.length === 0) {
+        container.textContent = "";
+    } else {
+        container.textContent = `${
+            selectedFiles.length
+        } file terpilih: ${selectedFiles.map((f) => f.name).join(", ")}`;
+    }
+}
+
+function formatFileSize(bytes) {
+    if (bytes === 0) return "0 B";
+    const k = 1024;
+    const sizes = ["B", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+}
+
+function formatDateTime(date) {
+    return new Date(date).toLocaleString("id-ID", {
+        day: "2-digit",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+    });
+}
+
+function downloadFile(filename) {
+    // Simulate file download
+    alert(`Downloading: ${filename}`);
+    // In real implementation, this would trigger actual file download
+}
