@@ -39,17 +39,7 @@
                 <div class="form-group">
                     <label class="form-label">Bidang</label>
                     <div class="bidang-container" id="bidangContainer">
-                        <input type="radio" id="bidang-aptika" class="bidang-checkbox" name="bidang"
-                            value="aptika" />
-                        <label for="bidang-aptika" class="bidang-option aptika">Aptika</label>
-
-                        <input type="radio" id="bidang-sarkom" class="bidang-checkbox" name="bidang"
-                            value="sarkom" />
-                        <label for="bidang-sarkom" class="bidang-option sarkom">Sarkom</label>
-
-                        <input type="radio" id="bidang-sekretariat" class="bidang-checkbox" name="bidang"
-                            value="sekretariat" />
-                        <label for="bidang-sekretariat" class="bidang-option sekretariat">Sekretariat</label>
+                        <!-- Will be populated by JavaScript from API -->
                     </div>
                 </div>
             </div>
@@ -63,7 +53,7 @@
                 <label class="form-label">Assign User</label>
                 <div class="search-box" style="margin-bottom: 12px; min-width: 100%">
                     <input type="text" id="userSearchInput" class="form-input" placeholder="Cari nama user..."
-                        oninput="filterAssignedUsers()" />
+                        oninput="filterAssignedUsers(this.value)" />
                 </div>
                 <div class="users-container" id="assignedUsersContainer"
                     style="

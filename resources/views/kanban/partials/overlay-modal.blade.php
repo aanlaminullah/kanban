@@ -95,3 +95,25 @@
         </div>
     </div>
 </div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Confirmation Modal -->
+<div class="modal-overlay" id="confirmModal">
+    <div class="confirm-modal">
+        <div class="confirm-icon" id="confirmIcon">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                    clip-rule="evenodd" />
+            </svg>
+        </div>
+        <div class="confirm-title" id="confirmTitle">Konfirmasi</div>
+        <div class="confirm-message" id="confirmMessage">Apakah Anda yakin?</div>
+        <div class="confirm-actions">
+            <button class="btn-confirm cancel" id="confirmCancel">Batal</button>
+            <button class="btn-confirm danger" id="confirmOk">Ya</button>
+        </div>
+    </div>
+</div>

@@ -2,31 +2,38 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+// Pastikan ini adalah model User yang benar, biasanya menggunakan Authenticatable
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
+     * Kolom yang dapat diisi secara massal.
+     * Menambahkan 'avatar', 'color', dan 'role' dari migrasi.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $fillable = [
         'name',
         'email',
         'password',
+        'avatar',
+        'color',
+        'role',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Kolom yang harus disembunyikan untuk serialisasi.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -34,15 +41,47 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * Casting tipe data kolom.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
+
+    // --- Relasi Baru ---
+
+    /**
+     * Dapatkan task yang ditugaskan kepada user ini (Many-to-Many).
+     */
+    public function tasks(): BelongsToMany
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsToMany(Task::class, 'task_users')
+            ->withPivot('assigned_at');
+    }
+
+    /**
+     * Dapatkan task yang dibuat oleh user ini (One-to-Many).
+     */
+    public function createdTasks(): HasMany
+    {
+        return $this->hasMany(Task::class, 'created_by');
+    }
+
+    /**
+     * Dapatkan komentar yang ditulis oleh user ini (One-to-Many).
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(TaskComment::class, 'author_id');
+    }
+
+    /**
+     * Dapatkan attachments yang diunggah oleh user ini (One-to-Many).
+     */
+    public function uploadedAttachments(): HasMany
+    {
+        return $this->hasMany(TaskAttachment::class, 'uploaded_by');
     }
 }

@@ -1,319 +1,12 @@
-// --- EXPANDED USER DATA ---
-const users = {
-    john: {
-        name: "John Doe",
-        avatar: "JD",
-        color: "#4299e1",
-    },
-    alice: {
-        name: "Alice Smith",
-        avatar: "AS",
-        color: "#48bb78",
-    },
-    bob: {
-        name: "Bob Johnson",
-        avatar: "BJ",
-        color: "#ed8936",
-    },
-    sarah: {
-        name: "Sarah Wilson",
-        avatar: "SW",
-        color: "#e53e3e",
-    },
-    david: {
-        name: "David Lee",
-        avatar: "DL",
-        color: "#68d391",
-    },
-    emma: {
-        name: "Emma Brown",
-        avatar: "EB",
-        color: "#f6ad55",
-    },
-    frank: {
-        name: "Frank Miller",
-        avatar: "FM",
-        color: "#38b2ac",
-    },
-    grace: {
-        name: "Grace Hall",
-        avatar: "GH",
-        color: "#d53f8c",
-    },
-    henry: {
-        name: "Henry King",
-        avatar: "HK",
-        color: "#00b5ad",
-    },
-    irene: {
-        name: "Irene Scott",
-        avatar: "IS",
-        color: "#a0aec0",
-    },
-    jacob: {
-        name: "Jacob Clark",
-        avatar: "JC",
-        color: "#b794f4",
-    },
-    kate: {
-        name: "Kate Walker",
-        avatar: "KW",
-        color: "#e9d8fd",
-    },
-    liam: {
-        name: "Liam Lewis",
-        avatar: "LL",
-        color: "#f6e05e",
-    },
-    mia: {
-        name: "Mia Harris",
-        avatar: "MH",
-        color: "#9f7aea",
-    },
-    noah: {
-        name: "Noah Young",
-        avatar: "NY",
-        color: "#4c51bf",
-    },
-};
-
-const userColors = [
-    "#f56565",
-    "#48bb78",
-    "#38b2ac",
-    "#4299e1",
-    "#9f7aea",
-    "#ed8936",
-    "#d53f8c",
-    "#a0aec0",
-    "#4c51bf",
-    "#00b5ad",
-];
-const moreUsers = [
-    "peter",
-    "quinn",
-    "ryan",
-    "sophia",
-    "thomas",
-    "ursula",
-    "victor",
-    "wendy",
-    "xavier",
-    "yara",
-    "zach",
-];
-
-moreUsers.forEach((id, index) => {
-    const name = id.charAt(0).toUpperCase() + id.slice(1) + " Tester";
-    const initials =
-        id.charAt(0).toUpperCase() + name.split(" ")[1].charAt(0).toUpperCase();
-    users[id] = {
-        name: name,
-        avatar: initials,
-        color: userColors[index % userColors.length],
-    };
-});
-// --- END EXPANDED USER DATA ---
+// Global users object (will be populated from API)
+let users = {};
 
 // Enhanced tasks data with new fields
-let tasks = [
-    {
-        id: 1,
-        title: "Implementasi Sistem Login",
-        deadline: "2024-09-20",
-        description:
-            "Membuat sistem autentikasi pengguna dengan JWT token dan validasi form",
-        column: "product-backlog",
-        priority: "high",
-        bidang: "aptika", // TAMBAH
-        assignedUsers: ["john", "alice", "peter", "sophia"], // Contoh banyak user
-        createdAt: new Date("2024-09-01T10:30:00"), // TAMBAH
-        completedAt: null, // TAMBAH
-        pendingReason: null, // TAMBAH
-        subtasks: [
-            {
-                id: 1,
-                text: "Setup JWT library",
-                completed: false,
-                createdBy: "john", // TAMBAH
-            },
-            {
-                id: 2,
-                text: "Buat login form",
-                completed: true,
-                createdBy: "john",
-            },
-            {
-                id: 3,
-                text: "Validasi input",
-                completed: false,
-                createdBy: "alice",
-            },
-        ],
-        attachments: [
-            // TAMBAH
-            {
-                id: 1,
-                name: "requirements.pdf",
-                size: "2.3 MB",
-                type: "pdf",
-                uploadedBy: "john",
-                uploadedAt: new Date("2024-09-02T10:00:00"),
-            },
-        ],
-        comments: [
-            // TAMBAH
-            {
-                id: 1,
-                text: "Sudah mulai implementasi JWT",
-                author: "john",
-                createdAt: new Date("2024-09-02T11:00:00"),
-                attachments: [],
-            },
-            {
-                id: 2,
-                text: "Perlu review lagi untuk security",
-                author: "alice",
-                createdAt: new Date("2024-09-02T15:30:00"),
-                attachments: [
-                    {
-                        id: 2,
-                        name: "security-checklist.docx",
-                        size: "1.1 MB",
-                        type: "docx",
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        id: 2,
-        title: "Design UI Dashboard",
-        deadline: "2024-10-20",
-        description:
-            "Merancang interface dashboard utama dengan komponen yang responsif",
-        column: "product-backlog",
-        priority: "medium",
-        bidang: "sarkom",
-        assignedUsers: ["alice", "frank"],
-        createdAt: new Date("2024-09-10T11:00:00"),
-        completedAt: null,
-        pendingReason: null,
-        subtasks: [
-            {
-                id: 1,
-                text: "Wireframe",
-                completed: true,
-                createdBy: "alice",
-            },
-            {
-                id: 2,
-                text: "Mockup design",
-                completed: false,
-                createdBy: "alice",
-            },
-        ],
-    },
-    {
-        id: 3,
-        title: "Fix Bug Authentication",
-        deadline: "2024-09-15",
-        description:
-            "Mengatasi masalah token expiry yang tidak ter-handle dengan baik",
-        column: "in-progress",
-        priority: "high",
-        bidang: "aptika",
-        assignedUsers: ["john", "henry"],
-        createdAt: new Date("2024-09-14T09:00:00"),
-        completedAt: null,
-        pendingReason: null,
-        subtasks: [
-            {
-                id: 1,
-                text: "Reproduce bug",
-                completed: true,
-                createdBy: "john",
-            },
-            {
-                id: 2,
-                text: "Fix implementation",
-                completed: false,
-                createdBy: "john",
-            },
-            {
-                id: 3,
-                text: "Testing",
-                completed: false,
-                createdBy: "john",
-            },
-        ],
-    },
-    {
-        id: 4,
-        title: "Database Schema",
-        deadline: "2024-10-12",
-        description:
-            "Membuat struktur database untuk aplikasi dengan relasi yang tepat",
-        column: "product-backlog",
-        priority: "medium",
-        bidang: "sekretariat",
-        assignedUsers: ["bob", "quinn"],
-        createdAt: new Date("2024-09-05T14:00:00"),
-        completedAt: null,
-        pendingReason: null,
-        subtasks: [
-            {
-                id: 1,
-                text: "ERD Design",
-                completed: false,
-                createdBy: "bob",
-            },
-            {
-                id: 2,
-                text: "Migration scripts",
-                completed: false,
-                createdBy: "bob",
-            },
-        ],
-    },
-    {
-        id: 5,
-        title: "Personal Learning: React Hooks",
-        deadline: "2024-10-25",
-        description: "Mempelajari advanced React Hooks untuk project mendatang",
-        column: "product-backlog",
-        priority: "low",
-        bidang: "sarkom",
-        assignedUsers: ["john", "sarah", "yara"],
-        createdAt: new Date("2024-09-26T16:00:00"),
-        completedAt: null,
-        pendingReason: null,
-        subtasks: [
-            {
-                id: 1,
-                text: "useCallback & useMemo",
-                completed: false,
-                createdBy: "sarah",
-            },
-            {
-                id: 2,
-                text: "Custom hooks",
-                completed: false,
-                createdBy: "sarah",
-            },
-            {
-                id: 3,
-                text: "Practice project",
-                completed: false,
-                createdBy: "john",
-            },
-        ],
-    },
-];
+let tasks = [];
 
 // --- NEW GLOBAL STATE FOR USER FILTER ---
 let selectedUserFilter = "";
-const userNames = Object.keys(users); // Array of user keys for filtering
+let userNames = []; // Array of user keys for filtering (will be populated from API)
 // ----------------------------------------
 
 // Helper function to get initials/avatar (if not already present)
@@ -354,6 +47,127 @@ const bidangClasses = {
     sarkom: "bidang-sarkom",
     sekretariat: "bidang-sekretariat",
 };
+
+// Toast Notification System
+let toastCounter = 0;
+
+function showToast(type, title, message, duration = 5000) {
+    const toastId = `toast-${++toastCounter}`;
+    const container =
+        document.getElementById("toastContainer") || createToastContainer();
+
+    const icons = {
+        success: `<svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                  </svg>`,
+        error: `<svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                </svg>`,
+        warning: `<svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                  </svg>`,
+        info: `<svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                 <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+               </svg>`,
+    };
+
+    const toast = document.createElement("div");
+    toast.id = toastId;
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+        <div class="toast-header">
+            <div class="toast-title">
+                <span class="toast-icon">${icons[type]}</span>
+                ${title}
+            </div>
+            <button class="toast-close" onclick="removeToast('${toastId}')">&times;</button>
+        </div>
+        <div class="toast-message">${message}</div>
+        <div class="toast-progress"></div>
+    `;
+
+    container.appendChild(toast);
+
+    // Trigger animation
+    setTimeout(() => toast.classList.add("show"), 10);
+
+    // Auto remove after duration
+    setTimeout(() => removeToast(toastId), duration);
+
+    // Click to dismiss
+    toast.addEventListener("click", () => removeToast(toastId));
+}
+
+function createToastContainer() {
+    const container = document.createElement("div");
+    container.id = "toastContainer";
+    container.className = "toast-container";
+    document.body.appendChild(container);
+    return container;
+}
+
+function removeToast(toastId) {
+    const toast = document.getElementById(toastId);
+    if (toast) {
+        toast.classList.remove("show");
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 300);
+    }
+}
+
+// Confirmation Dialog
+function showConfirm(title, message, onConfirm, type = "warning") {
+    return new Promise((resolve) => {
+        const modal = document.getElementById("confirmModal");
+        const titleEl = document.getElementById("confirmTitle");
+        const messageEl = document.getElementById("confirmMessage");
+        const iconEl = document.getElementById("confirmIcon");
+        const cancelBtn = document.getElementById("confirmCancel");
+        const okBtn = document.getElementById("confirmOk");
+
+        titleEl.textContent = title;
+        messageEl.textContent = message;
+        iconEl.className = `confirm-icon ${type}`;
+
+        modal.classList.add("active");
+        document.body.style.overflow = "hidden";
+
+        const handleConfirm = () => {
+            modal.classList.remove("active");
+            document.body.style.overflow = "auto";
+            if (onConfirm) onConfirm();
+            resolve(true);
+            cleanup();
+        };
+
+        const handleCancel = () => {
+            modal.classList.remove("active");
+            document.body.style.overflow = "auto";
+            resolve(false);
+            cleanup();
+        };
+
+        const cleanup = () => {
+            okBtn.removeEventListener("click", handleConfirm);
+            cancelBtn.removeEventListener("click", handleCancel);
+        };
+
+        okBtn.addEventListener("click", handleConfirm);
+        cancelBtn.addEventListener("click", handleCancel);
+
+        // Close with ESC
+        const handleEsc = (e) => {
+            if (e.key === "Escape") {
+                handleCancel();
+                document.removeEventListener("keydown", handleEsc);
+            }
+        };
+        document.addEventListener("keydown", handleEsc);
+    });
+}
 
 // Format date function (For Display: 20 Sep 2024)
 function formatDate(dateString) {
@@ -404,90 +218,73 @@ function updateOverdueStatus() {
 }
 
 // Filter tasks based on search and filters
-function filterTasks() {
+window.filterTasks = function () {
     const searchTerm =
         document.getElementById("searchInput")?.value?.toLowerCase() || "";
-    // HAPUS/KOMENTARI: Filter kolom ini tidak lagi digunakan
-    // const columnFilter = document.getElementById("columnFilter")?.value || "";
     const priorityFilter =
         document.getElementById("priorityFilter")?.value || "";
     const bidangFilter = document.getElementById("bidangFilter")?.value || "";
-
-    // UBAH: Ambil nilai dari variabel global 'selectedUserFilter' yang baru
-    // yang diisi oleh fungsi selectUserFilter()
-    const userFilterKey = selectedUserFilter; // <-- PENTING: Ganti dengan variabel global yang baru
-    // const userFilter = document.getElementById("userFilter")?.value?.toLowerCase() || ""; // <-- HAPUS/KOMENTARI BARIS LAMA INI
+    const userFilterKey = selectedUserFilter;
 
     filteredTasks = tasks.filter((task) => {
-        // HAPUS: Logika Filter by column (karena diganti)
-        // if (columnFilter && task.column !== columnFilter) return false;
-
         // Filter by priority
         if (priorityFilter && task.priority !== priorityFilter) return false;
+
         // Filter by bidang
         if (bidangFilter && task.bidang !== bidangFilter) return false;
 
-        // UBAH: Filter by assigned user (Gunakan userFilterKey)
-        // Ini adalah logika yang sekarang menggunakan variabel global
+        // Filter by assigned user - PERBAIKAN DI SINI
         if (userFilterKey) {
-            // Cek apakah assignedUsers berisi key user yang dipilih (userFilterKey)
-            if (
-                !task.assignedUsers ||
-                !task.assignedUsers.includes(userFilterKey)
-            ) {
+            // Normalize assignedUsers to string for comparison
+            const assignedUserIds = (task.assignedUsers || []).map((id) =>
+                id.toString()
+            );
+            if (!assignedUserIds.includes(userFilterKey)) {
                 return false;
             }
         }
 
-        // --- LOGIKA FILTER LAMA INI DIHAPUS KARENA SUDAH DISEDERHANAKAN DI ATAS ---
-        /*
-        if (userFilter) {
-            const userMatch = (task.assignedUsers || []).some((uid) => {
-                const user = users[uid];
-                if (!user) return false;
-                return (
-                    uid.toLowerCase().includes(userFilter) ||
-                    user.name.toLowerCase().includes(userFilter)
-                );
-            });
-            if (!userMatch) return false;
-        }
-        */
-        // ------------------------------------------------------------------------
-
-        // Filter by search term (judul, deskripsi, deadline, subtask, user)
-        // ... (Logika search term tetap sama)
+        // Filter by search term
         if (searchTerm) {
             const inTitle = task.title?.toLowerCase().includes(searchTerm);
             const inDesc = task.description?.toLowerCase().includes(searchTerm);
             const inDeadline = task.deadline
                 ?.toLowerCase()
                 .includes(searchTerm);
-            // Cari di subtask
             const inSubtask = (task.subtasks || []).some((st) =>
                 st.text?.toLowerCase().includes(searchTerm)
             );
-            // Cari di assigned user (nama atau id)
+
+            // PERBAIKAN: Normalize user IDs for search
             const inUser = (task.assignedUsers || []).some((uid) => {
-                const user = users[uid];
+                const userKey = uid.toString();
+                const user = users[userKey];
                 if (!user) return false;
                 return (
-                    uid.toLowerCase().includes(searchTerm) ||
+                    userKey.toLowerCase().includes(searchTerm) ||
                     user.name.toLowerCase().includes(searchTerm)
                 );
             });
+
             if (!(inTitle || inDesc || inDeadline || inSubtask || inUser))
                 return false;
         }
+
         return true;
     });
 
-    renderTasks(filteredTasks); // Pastikan ini menerima filteredTasks
+    renderTasks();
     updateOverdueStatus();
-}
+};
 
 // Create task card HTML
 function createTaskCard(task) {
+    console.log(
+        "Creating card for task:",
+        task.id,
+        "Attachments:",
+        task.attachments
+    );
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const taskDeadline = new Date(task.deadline);
@@ -580,38 +377,45 @@ function createTaskCard(task) {
        </div>`
             : "";
 
-    // Generate recent comments HTML
+    // Generate recent comments HTML - FIXED: Show latest comment at the bottom
     const commentsHTML =
         task.comments && task.comments.length > 0
             ? `<div class="chat-comments">
-        ${task.comments
-            .slice(-2)
-            .map(
-                (comment) =>
-                    `<div class="chat-comment">
-                <span class="chat-author">${
-                    users[comment.author]?.name || comment.author
-                }:</span>
-                ${comment.text.substring(0, 50)}${
-                        comment.text.length > 50 ? "..." : ""
-                    }
-            </div>`
-            )
-            .join("")}
-       </div>`
+    ${task.comments
+        .slice() // Create a copy of the array
+        .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)) // Sort by date ascending (oldest first)
+        .slice(-2) // Take the 2 most recent comments
+        .map(
+            (comment) =>
+                `<div class="chat-comment">
+            <span class="chat-author">${
+                users[comment.author]?.name || comment.author
+            }:</span>
+            ${comment.text.substring(0, 50)}${
+                    comment.text.length > 50 ? "..." : ""
+                }
+        </div>`
+        )
+        .join("")}
+   </div>`
             : "";
+
+    // Calculate total attachments from task attachments and comment attachments
+    const totalAttachments =
+        (task.attachments?.length || 0) +
+        (task.comments?.reduce(
+            (sum, comment) => sum + (comment.attachments?.length || 0),
+            0
+        ) || 0);
 
     // Chat section
     const chatSectionHTML =
-        (task.attachments && task.attachments.length > 0) ||
-        (task.comments && task.comments.length > 0)
+        totalAttachments > 0 || (task.comments && task.comments.length > 0)
             ? `<div class="task-chat-section">
         ${attachmentsHTML}
         ${commentsHTML}
         <button class="chat-toggle" onclick="openChatModal(${task.id})">
-            ${task.comments?.length || 0} komentar • ${
-                  task.attachments?.length || 0
-              } file
+            ${task.comments?.length || 0} komentar • ${totalAttachments} file
         </button>
        </div>`
             : `<div class="task-chat-section">
@@ -745,69 +549,89 @@ function renderTasks() {
  * Ini akan memilih user, mengosongkan search bar, dan me-render ulang list.
  */
 function handleUserSelection(userId) {
-    // Gunakan setTimeout untuk menunggu browser selesai mengubah status 'checked'
-    // pada checkbox yang terhubung dengan label sebelum kita membaca statusnya.
-    setTimeout(() => {
-        const checkbox = document.getElementById(`user-${userId}`);
-        const isChecked = checkbox.checked; // Ambil status akhir setelah klik
+    // Toggle user in global state
+    const index = taskAssignedUsers.indexOf(userId);
+    if (index > -1) {
+        // User already selected, remove them
+        taskAssignedUsers.splice(index, 1);
+    } else {
+        // User not selected, add them
+        taskAssignedUsers.push(userId);
+    }
 
-        // 1. Update the global state (Model)
-        if (isChecked) {
-            if (!taskAssignedUsers.includes(userId)) {
-                taskAssignedUsers.push(userId);
-            }
-        } else {
-            taskAssignedUsers = taskAssignedUsers.filter((id) => id !== userId);
-        }
+    // Re-render without clearing search to maintain user's typing
+    const searchInput = document.getElementById("userSearchInput");
+    const currentSearch = searchInput ? searchInput.value : "";
+    renderAssignedUsers(currentSearch);
 
-        // 2. UX Improvement: Kosongkan input pencarian jika user baru saja diseleksi
-        if (isChecked) {
-            document.getElementById("userSearchInput").value = "";
-        }
-
-        // 3. Re-render the list untuk menampilkan daftar user lengkap (jika search dikosongkan)
-        // dengan user yang baru diseleksi tetap ter-highlight.
-        filterAssignedUsers();
-    }, 0); // 0ms timeout (microtask)
+    // Keep focus on search input for better UX
+    if (searchInput) {
+        searchInput.focus();
+    }
 }
 
 // Render assigned users in modal, filtered by search term
 function renderAssignedUsers(searchTerm = "") {
     const container = document.getElementById("assignedUsersContainer");
-    const searchTermLower = searchTerm.toLowerCase();
+    if (!container) {
+        console.error("❌ assignedUsersContainer not found!");
+        return;
+    }
 
+    // Apply 3-column layout
+    container.className = "users-container three-columns";
+
+    const searchTermLower = searchTerm.toLowerCase().trim();
     let html = "";
+    let matchCount = 0;
 
     Object.keys(users).forEach((userId) => {
         const user = users[userId];
-        // Check if the user is currently assigned (kept in global state taskAssignedUsers)
         const isChecked = taskAssignedUsers.includes(userId);
 
-        // Filter logic: match user name or show all if search is empty
         if (
             searchTermLower === "" ||
-            user.name.toLowerCase().includes(searchTermLower)
+            user.name.toLowerCase().includes(searchTermLower) ||
+            userId.toLowerCase().includes(searchTermLower)
         ) {
+            matchCount++;
             html += `
-                        <input type="checkbox" id="user-${userId}" class="user-checkbox" value="${userId}" ${
-                isChecked ? "checked" : ""
-            }>
-                        <label for="user-${userId}" class="user-option" onclick="handleUserSelection('${userId}')"> <div class="user-option-avatar" style="background: ${
-                user.color
-            };">${user.avatar}</div>
-                            <span>${user.name}</span>
-                        </label>
-                    `;
+                <div class="user-option compact ${isChecked ? "selected" : ""}" 
+                     onclick="handleUserSelection('${userId}')">
+                    <div class="user-option-avatar" style="background: ${
+                        user.color
+                    };">
+                        ${user.avatar}
+                    </div>
+                    <span class="user-option-name">${user.name}</span>
+                    ${isChecked ? '<span class="checkmark">✓</span>' : ""}
+                </div>
+            `;
         }
     });
+
+    if (matchCount === 0) {
+        html =
+            '<div style="padding: 12px; color: #718096; text-align: center; grid-column: 1 / -1;">Tidak ada user yang cocok</div>';
+    }
 
     container.innerHTML = html;
 }
 
-// Handler for the search input
-function filterAssignedUsers() {
-    const searchTerm = document.getElementById("userSearchInput").value;
-    renderAssignedUsers(searchTerm);
+// Handler for the search input with debouncing for better performance
+let searchDebounceTimer = null;
+function filterAssignedUsers(searchValue = "") {
+    console.log("🔍 filterAssignedUsers called with:", searchValue);
+
+    // Clear previous timer
+    if (searchDebounceTimer) {
+        clearTimeout(searchDebounceTimer);
+    }
+
+    // Set new timer for smoother search
+    searchDebounceTimer = setTimeout(() => {
+        renderAssignedUsers(searchValue);
+    }, 150);
 }
 
 // OLD toggleUserAssignment REMOVED and logic moved to handleUserSelection
@@ -903,10 +727,16 @@ function handleDrop(event, columnId) {
 
 // Delete task function
 function deleteTask(taskId) {
-    if (confirm("Apakah Anda yakin ingin menghapus tugas ini?")) {
-        tasks = tasks.filter((task) => task.id !== taskId);
-        filterTasks();
-    }
+    showConfirm(
+        "Hapus Task",
+        "Apakah Anda yakin ingin menghapus tugas ini? Tindakan ini tidak dapat dibatalkan.",
+        () => {
+            tasks = tasks.filter((task) => task.id !== taskId);
+            filterTasks();
+            showToast("success", "Berhasil!", "Task berhasil dihapus");
+        },
+        "danger"
+    );
 }
 
 // --- Task Modal functions ---
@@ -930,8 +760,20 @@ function openAddTaskModal() {
 
     // Reset assigned user search and list state
     taskAssignedUsers = [];
-    document.getElementById("userSearchInput").value = "";
-    renderAssignedUsers();
+    const searchInput = document.getElementById("userSearchInput");
+    if (searchInput) {
+        searchInput.value = "";
+    }
+
+    // Wait for users to be loaded before rendering
+    if (Object.keys(users).length === 0) {
+        console.log("Users not loaded yet, loading now...");
+        loadUsersFromAPI().then(() => {
+            renderAssignedUsers();
+        });
+    } else {
+        renderAssignedUsers();
+    }
 
     // Uncheck all user checkboxes and reset bidang radio
     document
@@ -972,12 +814,28 @@ function openEditTaskModal(taskId) {
     });
 
     // Set assigned users state and render the list
-    taskAssignedUsers = [...(task.assignedUsers || [])];
-    document.getElementById("userSearchInput").value = "";
+    console.log("Edit task - assigned users:", task.assignedUsers);
+    taskAssignedUsers = Array.isArray(task.assignedUsers)
+        ? task.assignedUsers.map((id) => id.toString())
+        : [];
+    console.log("taskAssignedUsers set to:", taskAssignedUsers);
+
+    const searchInput = document.getElementById("userSearchInput");
+    if (searchInput) {
+        searchInput.value = "";
+    }
     renderAssignedUsers();
 
-    // Set subtasks
-    currentSubtasks = [...(task.subtasks || [])];
+    // Set subtasks - pastikan createdBy di-preserve
+    currentSubtasks = (task.subtasks || []).map((subtask) => ({
+        id: subtask.id,
+        text: subtask.text,
+        completed: subtask.completed,
+        createdBy: subtask.createdBy ? subtask.createdBy.toString() : null,
+        creatorName: subtask.creatorName || null,
+    }));
+
+    console.log("Loaded subtasks for edit:", currentSubtasks);
     updateSubtasksList();
 
     setTimeout(() => {
@@ -1022,7 +880,11 @@ function handlePendingSubmit(event) {
             tasks[taskIndex].column = "pending";
             tasks[taskIndex].pendingReason = reason;
             tasks[taskIndex].completedAt = null; // Clear completion date
-            alert("Task berhasil dipindahkan ke Pending!");
+            showToast(
+                "success",
+                "Berhasil!",
+                "Task berhasil dipindahkan ke Pending"
+            );
         }
         closePendingModal();
     }
@@ -1116,7 +978,7 @@ function handleReactivationSubmit(event) {
                       " "
                   )}!`;
 
-            alert(message);
+            showToast("success", "Berhasil!", message);
         }
         closeReactivationModal();
     }
@@ -1129,11 +991,15 @@ function addSubtask() {
     const text = input.value.trim();
 
     if (text) {
+        const currentUserId = window.currentUser
+            ? window.currentUser.id.toString()
+            : "1";
+
         currentSubtasks.push({
             id: nextSubtaskId++,
             text: text,
             completed: false,
-            createdBy: "john", // Default creator for new subtasks
+            createdBy: currentUserId, // String ID
         });
         input.value = "";
         updateSubtasksList();
@@ -1150,28 +1016,48 @@ function updateSubtasksList() {
     if (currentSubtasks.length === 0) {
         container.innerHTML =
             '<div style="text-align: center; color: #a0aec0; font-style: italic; padding: 8px;">Belum ada subtask</div>';
-    } else {
-        container.innerHTML = currentSubtasks
-            .map(
-                (subtask) => `
-                    <div class="subtask-edit-item">
-                        <input type="checkbox" ${
-                            subtask.completed ? "checked" : ""
-                        } 
-                               onchange="currentSubtasks.find(st => st.id === ${
-                                   subtask.id
-                               }).completed = this.checked">
-                        <span class="subtask-edit-text">${subtask.text} (${
-                    users[subtask.createdBy]?.name || "Unknown"
-                })</span>
-                        <button type="button" class="remove-subtask-btn" onclick="removeSubtask(${
-                            subtask.id
-                        })">×</button>
-                    </div>
-                `
-            )
-            .join("");
+        return;
     }
+
+    container.innerHTML = currentSubtasks
+        .map((subtask) => {
+            let creatorDisplay = "";
+
+            // Priority 1: Gunakan users object jika createdBy ada
+            if (subtask.createdBy && users[subtask.createdBy]) {
+                creatorDisplay = ` (${users[subtask.createdBy].name})`;
+            }
+            // Priority 2: Gunakan creatorName dari backend
+            else if (subtask.creatorName && subtask.creatorName !== "Unknown") {
+                creatorDisplay = ` (${subtask.creatorName})`;
+            }
+            // Priority 3: Jika baru dibuat (belum ada di DB)
+            else if (
+                subtask.createdBy &&
+                window.currentUser &&
+                subtask.createdBy === window.currentUser.id.toString()
+            ) {
+                creatorDisplay = ` (${window.currentUser.name})`;
+            }
+
+            return `
+                <div class="subtask-edit-item">
+                    <input type="checkbox" ${
+                        subtask.completed ? "checked" : ""
+                    } 
+                           onchange="currentSubtasks.find(st => st.id === ${
+                               subtask.id
+                           }).completed = this.checked">
+                    <span class="subtask-edit-text">${
+                        subtask.text
+                    }${creatorDisplay}</span>
+                    <button type="button" class="remove-subtask-btn" onclick="removeSubtask(${
+                        subtask.id
+                    })">×</button>
+                </div>
+            `;
+        })
+        .join("");
 }
 
 // Add/Update task function
@@ -1194,12 +1080,20 @@ function handleTaskSubmit(event) {
         // Validation to ensure date is not in the past
         const today = new Date().toISOString().split("T")[0];
         if (deadlineISO < today) {
-            alert("Deadline tidak boleh tanggal yang sudah lewat.");
+            showToast(
+                "error",
+                "Error!",
+                "Deadline tidak boleh tanggal yang sudah lewat."
+            );
             return;
         }
 
         if (assignedUsers.length === 0) {
-            alert("Mohon tetapkan setidaknya satu user pada task ini.");
+            showToast(
+                "warning",
+                "Peringatan!",
+                "Mohon tetapkan setidaknya satu user pada task ini."
+            );
             return;
         }
 
@@ -1221,7 +1115,7 @@ function handleTaskSubmit(event) {
                     subtasks: [...currentSubtasks],
                 };
             }
-            alert("Task berhasil diupdate!");
+            showToast("success", "Berhasil!", "Task berhasil diupdate!");
         } else {
             // Add new task
             const newTask = {
@@ -1240,23 +1134,50 @@ function handleTaskSubmit(event) {
             };
 
             tasks.push(newTask);
-            alert("Task berhasil ditambahkan!");
+            showToast("success", "Berhasil!", "Task berhasil ditambahkan!");
         }
 
         filterTasks();
         closeTaskModal();
     } else {
-        alert(
-            "Semua field (Judul, Prioritas, Deadline, Bidang, Deskripsi) wajib diisi!"
-        );
+        showToast("warning", "Peringatan!", "Semua field wajib diisi!");
     }
 }
 
-// Logout function
-function logout() {
-    if (confirm("Apakah Anda yakin ingin keluar?")) {
-        alert("Anda telah berhasil logout!");
-    }
+// // Logout function
+// function logout() {
+//     showConfirm(
+//         "Logout",
+//         "Apakah Anda yakin ingin keluar dari aplikasi?",
+//         () => {
+//             showToast("info", "Goodbye!", "Anda telah berhasil logout");
+//             // Redirect logic here
+//         },
+//         "warning"
+//     );
+// }
+
+// Function to clear the user filter
+function clearUserFilter() {
+    selectedUserFilter = "";
+    document.getElementById("selectedUserName").textContent = "";
+    document.getElementById("userFilterDropdown").style.display = "none";
+    document.getElementById("userSearchInput").value = ""; // Clear search input
+    renderUserList(); // Re-render to clear selection
+    filterTasks(); // Apply task filter
+}
+
+// Logout function with confirmation
+function handleLogout(event) {
+    event.preventDefault();
+    showConfirm(
+        "Logout",
+        "Apakah Anda yakin ingin keluar dari aplikasi?",
+        () => {
+            document.getElementById("logoutForm").submit();
+        },
+        "warning"
+    );
 }
 
 // Event listeners
@@ -1280,6 +1201,19 @@ document.addEventListener("DOMContentLoaded", function () {
     document
         .getElementById("pendingForm")
         .addEventListener("submit", handlePendingSubmit);
+
+    // Enter key for pending reason input
+    const pendingReasonInput = document.getElementById("pendingReasonInput");
+    if (pendingReasonInput) {
+        pendingReasonInput.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                document
+                    .getElementById("pendingForm")
+                    .dispatchEvent(new Event("submit"));
+            }
+        });
+    }
 
     // Form submit listener for Reactivation Modal
     document
@@ -1375,15 +1309,17 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-    // Message input enter key (Ctrl+Enter to send)
-    document
-        .getElementById("messageInput")
-        .addEventListener("keydown", function (e) {
-            if (e.key === "Enter" && e.ctrlKey) {
+    // Message input enter key
+    const messageInput = document.getElementById("messageInput");
+    if (messageInput) {
+        messageInput.addEventListener("keydown", function (e) {
+            // Enter alone to send (unless Shift is held for new line)
+            if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
                 sendMessage();
             }
         });
+    }
 
     if (document.getElementById("userListContainer")) {
         renderUserList();
@@ -1444,7 +1380,12 @@ function renderChatMessages() {
         return;
     }
 
-    container.innerHTML = task.comments
+    // Reverse the comments array to show newest at bottom
+    const sortedComments = [...task.comments].sort((a, b) => {
+        return new Date(a.createdAt) - new Date(b.createdAt);
+    });
+
+    container.innerHTML = sortedComments
         .map((comment) => {
             const author = users[comment.author] || {
                 name: comment.author,
@@ -1454,7 +1395,9 @@ function renderChatMessages() {
                 comment.attachments
                     ?.map(
                         (att) =>
-                            `<a href="#" class="message-attachment" onclick="downloadFile('${att.name}')">
+                            `<a href="#" class="message-attachment" onclick="event.preventDefault(); downloadFile('${
+                                att.url || "#"
+                            }', '${att.name}')">
                 <svg width="12" height="12" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
                 </svg>
@@ -1482,15 +1425,21 @@ function renderChatMessages() {
         })
         .join("");
 
-    // Scroll to bottom
-    container.scrollTop = container.scrollHeight;
+    // Scroll to bottom with slight delay
+    setTimeout(() => {
+        container.scrollTop = container.scrollHeight;
+    }, 100);
 }
 
 function sendMessage() {
     const messageText = document.getElementById("messageInput").value.trim();
 
     if (!messageText && selectedFiles.length === 0) {
-        alert("Masukkan pesan atau pilih file untuk dikirim");
+        showToast(
+            "warning",
+            "Peringatan!",
+            "Masukkan pesan atau pilih file untuk dikirim"
+        );
         return;
     }
 
@@ -1566,10 +1515,17 @@ function formatDateTime(date) {
     });
 }
 
-function downloadFile(filename) {
-    // Simulate file download
-    alert(`Downloading: ${filename}`);
-    // In real implementation, this would trigger actual file download
+function downloadFile(url, filename) {
+    // Create temporary link and trigger download
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    link.target = "_blank";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    showToast("info", "Download", `Mengunduh file: ${filename}`);
 }
 
 // Function to toggle the user filter dropdown
@@ -1604,8 +1560,13 @@ function closeUserFilterOutside(event) {
 // Function to render the list of users
 function renderUserList(searchQuery = "") {
     const container = document.getElementById("userListContainer");
+    if (!container) return;
+
     let html = "";
     const query = searchQuery.toLowerCase().trim();
+
+    // Update userNames from current users object
+    userNames = Object.keys(users);
 
     const filteredUsers = userNames.filter((userKey) => {
         const user = users[userKey];
