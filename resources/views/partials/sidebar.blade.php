@@ -6,7 +6,7 @@
     </div>
 
     <div class="sidebar-menu">
-        <a href="#" class="menu-item">
+        <a href="/dashboard" class="menu-item {{ request()->is('dashboard') ? 'active' : '' }}">
             <svg class="menu-icon" fill="currentColor" viewBox="0 0 20 20">
                 <path
                     d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
@@ -14,7 +14,7 @@
             Dashboard
         </a>
 
-        <a href="#" class="menu-item active">
+        <a href="/kanban" class="menu-item {{ request()->is('kanban') || request()->is('/') ? 'active' : '' }}">
             <svg class="menu-icon" fill="currentColor" viewBox="0 0 20 20">
                 <path
                     d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
@@ -22,7 +22,7 @@
             Kanban Board
         </a>
 
-        <a href="#" class="menu-item">
+        {{-- <a href="#" class="menu-item">
             <svg class="menu-icon" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd"
                     d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
@@ -54,18 +54,31 @@
                     clip-rule="evenodd" />
             </svg>
             Settings
-        </a>
+        </a> --}}
     </div>
 
     <form id="logoutForm" action="{{ route('logout') }}" method="POST" style="display: none;">
         @csrf
     </form>
-    <button class="logout-btn" onclick="handleLogout(event)">
-        <svg style="width: 16px; height: 16px; margin-right: 8px" fill="currentColor" viewBox="0 0 20 20">
+    <button class="logout-btn" onclick="logout()">
+        <svg style="width: 16px; height: 16px; margin-right: 8px;" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd"
                 d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
                 clip-rule="evenodd" />
         </svg>
         Logout
     </button>
+
+    <form id="logoutForm" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
 </div>
+
+<script>
+    function handleLogout(event) {
+        event.preventDefault();
+        if (confirm('Apakah Anda yakin ingin keluar?')) {
+            document.getElementById('logoutForm').submit();
+        }
+    }
+</script>

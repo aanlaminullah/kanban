@@ -1,11 +1,16 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\KanbanController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KanbanController;
 
 // Authentication Routes
 Route::get('/', function () {
+    if (Auth::check()) {
+        return redirect()->route('kanban.index');
+    }
     return redirect()->route('login');
 });
 
@@ -32,4 +37,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/users', [KanbanController::class, 'getUsers']);
         Route::get('/bidangs', [KanbanController::class, 'getBidangs']);
     });
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/api/chart-data', [DashboardController::class, 'getChartData']);
 });

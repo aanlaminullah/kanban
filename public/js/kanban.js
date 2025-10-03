@@ -51,124 +51,6 @@ const bidangClasses = {
 // Toast Notification System
 let toastCounter = 0;
 
-function showToast(type, title, message, duration = 5000) {
-    const toastId = `toast-${++toastCounter}`;
-    const container =
-        document.getElementById("toastContainer") || createToastContainer();
-
-    const icons = {
-        success: `<svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                  </svg>`,
-        error: `<svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                </svg>`,
-        warning: `<svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                  </svg>`,
-        info: `<svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                 <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-               </svg>`,
-    };
-
-    const toast = document.createElement("div");
-    toast.id = toastId;
-    toast.className = `toast ${type}`;
-    toast.innerHTML = `
-        <div class="toast-header">
-            <div class="toast-title">
-                <span class="toast-icon">${icons[type]}</span>
-                ${title}
-            </div>
-            <button class="toast-close" onclick="removeToast('${toastId}')">&times;</button>
-        </div>
-        <div class="toast-message">${message}</div>
-        <div class="toast-progress"></div>
-    `;
-
-    container.appendChild(toast);
-
-    // Trigger animation
-    setTimeout(() => toast.classList.add("show"), 10);
-
-    // Auto remove after duration
-    setTimeout(() => removeToast(toastId), duration);
-
-    // Click to dismiss
-    toast.addEventListener("click", () => removeToast(toastId));
-}
-
-function createToastContainer() {
-    const container = document.createElement("div");
-    container.id = "toastContainer";
-    container.className = "toast-container";
-    document.body.appendChild(container);
-    return container;
-}
-
-function removeToast(toastId) {
-    const toast = document.getElementById(toastId);
-    if (toast) {
-        toast.classList.remove("show");
-        setTimeout(() => {
-            if (toast.parentNode) {
-                toast.parentNode.removeChild(toast);
-            }
-        }, 300);
-    }
-}
-
-// Confirmation Dialog
-function showConfirm(title, message, onConfirm, type = "warning") {
-    return new Promise((resolve) => {
-        const modal = document.getElementById("confirmModal");
-        const titleEl = document.getElementById("confirmTitle");
-        const messageEl = document.getElementById("confirmMessage");
-        const iconEl = document.getElementById("confirmIcon");
-        const cancelBtn = document.getElementById("confirmCancel");
-        const okBtn = document.getElementById("confirmOk");
-
-        titleEl.textContent = title;
-        messageEl.textContent = message;
-        iconEl.className = `confirm-icon ${type}`;
-
-        modal.classList.add("active");
-        document.body.style.overflow = "hidden";
-
-        const handleConfirm = () => {
-            modal.classList.remove("active");
-            document.body.style.overflow = "auto";
-            if (onConfirm) onConfirm();
-            resolve(true);
-            cleanup();
-        };
-
-        const handleCancel = () => {
-            modal.classList.remove("active");
-            document.body.style.overflow = "auto";
-            resolve(false);
-            cleanup();
-        };
-
-        const cleanup = () => {
-            okBtn.removeEventListener("click", handleConfirm);
-            cancelBtn.removeEventListener("click", handleCancel);
-        };
-
-        okBtn.addEventListener("click", handleConfirm);
-        cancelBtn.addEventListener("click", handleCancel);
-
-        // Close with ESC
-        const handleEsc = (e) => {
-            if (e.key === "Escape") {
-                handleCancel();
-                document.removeEventListener("keydown", handleEsc);
-            }
-        };
-        document.addEventListener("keydown", handleEsc);
-    });
-}
-
 // Format date function (For Display: 20 Sep 2024)
 function formatDate(dateString) {
     const options = {
@@ -382,9 +264,9 @@ function createTaskCard(task) {
         task.comments && task.comments.length > 0
             ? `<div class="chat-comments">
     ${task.comments
-        .slice() // Create a copy of the array
-        .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)) // Sort by date ascending (oldest first)
-        .slice(-2) // Take the 2 most recent comments
+        .slice()
+        .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+        .slice(-2)
         .map(
             (comment) =>
                 `<div class="chat-comment">
@@ -400,7 +282,7 @@ function createTaskCard(task) {
    </div>`
             : "";
 
-    // Calculate total attachments from task attachments and comment attachments
+    // Calculate total attachments from task attachments and comment attachment
     const totalAttachments =
         (task.attachments?.length || 0) +
         (task.comments?.reduce(
@@ -549,25 +431,35 @@ function renderTasks() {
  * Ini akan memilih user, mengosongkan search bar, dan me-render ulang list.
  */
 function handleUserSelection(userId) {
+    const user = users[userId];
+
     // Toggle user in global state
     const index = taskAssignedUsers.indexOf(userId);
     if (index > -1) {
-        // User already selected, remove them
         taskAssignedUsers.splice(index, 1);
+        console.log(`❌ ${user.name} removed`);
     } else {
-        // User not selected, add them
         taskAssignedUsers.push(userId);
+        console.log(`✅ ${user.name} added`);
     }
 
-    // Re-render without clearing search to maintain user's typing
+    // Clear search input
     const searchInput = document.getElementById("userSearchInput");
-    const currentSearch = searchInput ? searchInput.value : "";
-    renderAssignedUsers(currentSearch);
-
-    // Keep focus on search input for better UX
     if (searchInput) {
-        searchInput.focus();
+        searchInput.value = "";
+        searchInput.placeholder = `${user.name} dipilih...`; // Feedback visual
     }
+
+    // Re-render dengan search kosong
+    renderAssignedUsers("");
+
+    // Reset placeholder dan fokus setelah delay
+    setTimeout(() => {
+        if (searchInput) {
+            searchInput.placeholder = "Cari nama user...";
+            searchInput.focus();
+        }
+    }, 1000); // Reset placeholder setelah 1 detik
 }
 
 // Render assigned users in modal, filtered by search term
@@ -1144,19 +1036,6 @@ function handleTaskSubmit(event) {
     }
 }
 
-// // Logout function
-// function logout() {
-//     showConfirm(
-//         "Logout",
-//         "Apakah Anda yakin ingin keluar dari aplikasi?",
-//         () => {
-//             showToast("info", "Goodbye!", "Anda telah berhasil logout");
-//             // Redirect logic here
-//         },
-//         "warning"
-//     );
-// }
-
 // Function to clear the user filter
 function clearUserFilter() {
     selectedUserFilter = "";
@@ -1165,19 +1044,6 @@ function clearUserFilter() {
     document.getElementById("userSearchInput").value = ""; // Clear search input
     renderUserList(); // Re-render to clear selection
     filterTasks(); // Apply task filter
-}
-
-// Logout function with confirmation
-function handleLogout(event) {
-    event.preventDefault();
-    showConfirm(
-        "Logout",
-        "Apakah Anda yakin ingin keluar dari aplikasi?",
-        () => {
-            document.getElementById("logoutForm").submit();
-        },
-        "warning"
-    );
 }
 
 // Event listeners
@@ -1197,12 +1063,28 @@ document.addEventListener("DOMContentLoaded", function () {
         .getElementById("taskForm")
         .addEventListener("submit", handleTaskSubmit);
 
-    // Form submit listener for Pending Modal
+    // PREVENT ENTER KEY FROM SUBMITTING TASK FORM (hanya untuk input fields kecuali textarea)
+    document
+        .getElementById("taskForm")
+        .addEventListener("keydown", function (e) {
+            // Hanya prevent Enter untuk input fields tertentu, bukan untuk textarea dan userSearchInput
+            if (
+                e.key === "Enter" &&
+                !e.shiftKey &&
+                e.target.tagName !== "TEXTAREA" &&
+                e.target.id !== "subtaskInput" &&
+                e.target.id !== "userSearchInput"
+            ) {
+                e.preventDefault();
+            }
+        });
+
+    // Form submit listener for Pending Modal - TETAP BISA ENTER
     document
         .getElementById("pendingForm")
         .addEventListener("submit", handlePendingSubmit);
 
-    // Enter key for pending reason input
+    // Enter key for pending reason input - TETAP BISA ENTER
     const pendingReasonInput = document.getElementById("pendingReasonInput");
     if (pendingReasonInput) {
         pendingReasonInput.addEventListener("keydown", function (e) {
@@ -1218,7 +1100,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Form submit listener for Reactivation Modal
     document
         .getElementById("reactivationForm")
-        .addEventListener("submit", handleReactivationSubmit); // Renamed
+        .addEventListener("submit", handleReactivationSubmit);
 
     // Close modal when clicking outside
     document
@@ -1240,9 +1122,8 @@ document.addEventListener("DOMContentLoaded", function () {
     document
         .getElementById("reactivationModal")
         .addEventListener("click", function (e) {
-            // Renamed
             if (e.target === this) {
-                closeReactivationModal(); // Renamed
+                closeReactivationModal();
             }
         });
 
@@ -1264,12 +1145,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (
             e.key === "Escape" &&
-            document.getElementById("reactivationModal").classList.contains(
-                // Renamed
-                "active"
-            )
+            document
+                .getElementById("reactivationModal")
+                .classList.contains("active")
         ) {
-            closeReactivationModal(); // Renamed
+            closeReactivationModal();
         }
 
         if (
@@ -1282,7 +1162,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Subtask input enter key
+    // Subtask input enter key - TETAP BISA ENTER
     document
         .getElementById("subtaskInput")
         .addEventListener("keypress", function (e) {
@@ -1300,6 +1180,7 @@ document.addEventListener("DOMContentLoaded", function () {
         updateOverdueTasks();
         filterTasks();
     }, 60000);
+
     // Close chat modal when clicking outside
     document
         .getElementById("chatModal")
@@ -1309,11 +1190,10 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-    // Message input enter key
+    // Message input enter key - TETAP BISA ENTER
     const messageInput = document.getElementById("messageInput");
     if (messageInput) {
         messageInput.addEventListener("keydown", function (e) {
-            // Enter alone to send (unless Shift is held for new line)
             if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
                 sendMessage();
@@ -1323,6 +1203,74 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (document.getElementById("userListContainer")) {
         renderUserList();
+    }
+
+    // FIXED: Enter key untuk quick selection user - VERSI DIPERBAIKI DENGAN STOP PROPAGATION
+    const searchInput = document.getElementById("userSearchInput"); // Ini untuk modal task
+    const filterSearchInput = document.getElementById("userFilterSearchInput"); // Ini untuk filter header
+
+    // Handler untuk user search di modal task
+    if (searchInput) {
+        searchInput.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+
+                console.log("Enter pressed in task modal user search");
+
+                // Cari user pertama yang visible di hasil pencarian
+                const firstUserOption = document.querySelector(
+                    ".user-option.compact:not(.selected)"
+                );
+
+                if (firstUserOption) {
+                    console.log("Found user option:", firstUserOption);
+
+                    // Ekstrak userId dari atribut onclick
+                    const onclickAttr = firstUserOption.getAttribute("onclick");
+                    console.log("onclick attribute:", onclickAttr);
+
+                    if (onclickAttr) {
+                        let userId = null;
+                        const match = onclickAttr.match(
+                            /handleUserSelection\('([^']+)'\)/
+                        );
+                        if (match && match[1]) {
+                            userId = match[1];
+                        }
+
+                        if (userId) {
+                            console.log("Quick selecting user:", userId);
+                            handleUserSelection(userId);
+
+                            // Focus kembali ke search input setelah selection
+                            setTimeout(() => {
+                                searchInput.focus();
+                                searchInput.value = ""; // Clear search
+                                renderAssignedUsers(""); // Reset filter
+                            }, 100);
+                        }
+                    }
+                }
+            }
+        });
+
+        // Real-time search saat mengetik
+        searchInput.addEventListener("input", function (e) {
+            filterAssignedUsers(e.target.value);
+        });
+    }
+
+    // Handler untuk user filter di header (jika ada)
+    if (filterSearchInput) {
+        filterSearchInput.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                // Untuk filter header, mungkin tidak perlu quick select
+                // Biarkan hanya untuk search saja
+            }
+        });
     }
 });
 

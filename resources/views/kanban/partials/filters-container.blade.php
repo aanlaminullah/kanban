@@ -15,7 +15,7 @@
             Filter User <span id="selectedUserName" class="filter-selection-display"></span>
         </button>
         <div class="custom-filter-dropdown" id="userFilterDropdown" style="display: none;">
-            <input type="text" id="userSearchInput" class="user-search-input" placeholder="Cari user..."
+            <input type="text" id="userFilterSearchInput" class="user-search-input" placeholder="Cari user..."
                 oninput="filterUserList(this.value)" />
             <div class="user-list-container" id="userListContainer">
             </div>
